@@ -5,7 +5,7 @@ WIP. Buggy.
 ![Image](https://i.imgur.com/GsgvYjf.png)
 
 ### Requirements:  
-https://docs.cs50.net/web/2018/w/projects/1/project1.html
+https://docs.cs50.net/web/2018/w/projects/2/project2.html
 
 ### Currently Working
 * Real-time messaging
