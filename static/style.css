@@ -2,45 +2,61 @@
     height: 453px;
     width: auto;
     overflow-y: scroll;
-    border: 1px solid rgba(0,0,0,.125);
+    border: 1px solid rgba(0, 0, 0, .125);
 }
+
 input {
     width: 100%;
 }
-.message {
-    background-color: rgba(0,0,0,.03);
-    padding-left:10px;
-    padding-right:10px;
 
+.message {
+    background-color: rgba(0, 0, 0, .03);
+    padding-left: 10px;
+    padding-right: 10px;
 }
+
 .user {
     font-weight: bold;
 }
+
 .time {
     font-weight: lighter;
 }
 
-.grid-container {
-display: grid;
-height: 300px;
-grid-template-columns: 250px 1fr;
-grid-template-rows: 1fr 1fr;
-grid-gap: 5px 5px;
-grid-template-areas: "channel-list chat" "online-list chat";
-
+td {
+    padding: 5px !important;
 }
 
-.chat { grid-area: chat; }
+.grid-container {
+    display: grid;
+    height: 300px;
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-gap: 5px 5px;
+    grid-template-areas: "channel-list chat""online-list chat";
+}
 
-.channel-list { grid-area: channel-list; }
+.chat {
+    grid-area: chat;
+}
 
-.online-list { grid-area: online-list; }
+.channel-list {
+    grid-area: channel-list;
+}
+
+.online-list {
+    grid-area: online-list;
+}
 
 .flex {
-   display: flex;
-   flex-direction: row;
+    display: flex;
+    flex-direction: row;
 }
 
-.message-input {
-    margin-left: 10px;
+#message-input {
+    margin-left: 5px;
+}
+
+a.hash::before {
+    content: "testing";
 }
