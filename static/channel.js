@@ -1,7 +1,8 @@
 var current_channel = document.URL.split("/").pop();
 
 // Connect to websocket
-var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+//var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+var socket = io.connect();
 
 // when user exits out, emit user has left to server
 window.onbeforeunload = () => {
