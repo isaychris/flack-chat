@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             let messageblock = `<article class="message">
                     <span class="user">${data["user"]}</span> <span class="time">[${data["time"]}]</span>
-                    <p>${decodeURIComponent(escape(data["message"]))}</p>
+                    <p>${data["message"]}</p>
                     </article>`;
 
             document.querySelector('#messages-container').innerHTML += messageblock;
