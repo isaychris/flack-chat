@@ -1,8 +1,8 @@
 # flack
 Slack clone powered by Flask and Socket.IO
 
-WIP. Buggy.
-![Image](https://i.imgur.com/GsgvYjf.png)
+WIP. 
+![Image](https://i.imgur.com/OrLpqRr.png)
 
 ### Requirements:  
 https://docs.cs50.net/web/2018/w/projects/1/project1.html
@@ -15,14 +15,15 @@ https://docs.cs50.net/web/2018/w/projects/1/project1.html
 * Channel list
 * Channel selection
 * Loading recent messages
+* Emoji's
 
 ### TO-DO
 * ~~Channel selection~~
 * ~~Limit number of messages for each channel to 100~~
 * ~~Load saved messages from server~~
 * ~~Press enter to submit messages~~
+* ~~Fix layout~~
 * Check for naming duplicates
 * Fix buggy online-list
-* Fix layout
 * Navigation Bar
 * Dark Mode ?

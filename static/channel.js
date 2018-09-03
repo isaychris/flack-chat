@@ -1,11 +1,17 @@
 var current_channel = document.URL.split("/").pop();
 
+// Connect to websocket
+var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+// when user exits out, emit user has left to server
+window.onbeforeunload = () => {
+	socket.emit('remove user', {
+		'display': localStorage.getItem('display')
+	});
+}
+		
 // When the webpage is done loading ...
 document.addEventListener('DOMContentLoaded', () => {
-
-    // Connect to websocket
-    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
-
     // Add onclick event listener to create channel button
     document.getElementById("new-channel-button").addEventListener("click", () => {
 
@@ -16,14 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     });
 
-
     // When client is connected ...
     socket.on('connect', () => {
-
         // Prompt for display name if not set
-        if (!localStorage.getItem('display')) {
+        if (localStorage.getItem('display') == null) {
             var display = prompt("Enter a display name: ")
-            localStorage.setItem('display', display)
+            
+            localStorage.setItem('display', display);
         }
 
         // update display name label
@@ -39,12 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('enter pressed');
             let text = document.querySelector('input');
             let time = new Date();
-            let current = time.getHours() + ":" + time.getMinutes();
 
             // send message to server
             socket.emit('add message', {
                 'user': localStorage.getItem('display'),
-                'time': current,
+                'time': time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }),
                 'message': text.value,
                 'channel': current_channel
             });
@@ -60,13 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // when user exits out, emit user has left to server
-        window.onbeforeunload = () => {
-            socket.emit('remove user', {
-                'display': localStorage.getItem('display')
-            });
-            return "";
-        }
     });
 
 
@@ -75,9 +72,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // only add message to the specifed channel
         if (data["channel"] == current_channel) {
+            
             let messageblock = `<article class="message">
                     <span class="user">${data["user"]}</span> <span class="time">[${data["time"]}]</span>
-                    <p>${data["message"]}</p>
+                    <p>${decodeURIComponent(escape(data["message"]))}</p>
                     </article>`;
 
             document.querySelector('#messages-container').innerHTML += messageblock;
@@ -117,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('announce channel', data => {
         console.log('new channel announced');
         let link = "/c/" + data['channel'];
-        let new_channel = `<tr><td>#<a href="${link}">${data['channel']}</a></td></tr>`;
+        let new_channel = `<tr><td># <a href="${link}">${data['channel']}</a></td></tr>`;
         document.getElementById("channel_table").innerHTML += new_channel;
     });
 });

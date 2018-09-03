@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, session, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
@@ -13,35 +13,32 @@ messages = {"lobby": []}
 
 @app.route("/")
 def index():    
-    return redirect(url_for('lobby'))
-
-@app.route("/c/lobby")
-def lobby():
-    return render_template("channel.html", online_list=online_list, channel_list=channel_list, messages=messages["lobby"], current_channel="lobby")
+    return redirect(url_for('channel', name='lobby'))
 
 @app.route("/c/<string:name>")
 def channel(name):
     if name not in channel_list:
-        return "Error"
+        return "The channel {} does not exist.".format(name)
 
     return render_template("channel.html", online_list=online_list, channel_list=channel_list, messages=messages[name], current_channel=name)
 
 @socketio.on("add message")
 def sent(data):
-    print("message received")
+    print("message received")    
     messages[data["channel"]].append((data["user"], data["time"], data["message"]))
     
     while(len(messages[data["channel"]]) > 100):
         messages[data["channel"]].pop(0)
     
-    print(messages[data["channel"]])
     emit("announce message", {"user": data["user"], "time": data["time"], "message": data["message"], "channel": data["channel"] }, broadcast=True)
 
 @socketio.on("add user")
 def joined(data):
-    print(data['display'] + " has joined!")
-    online_list.append(data['display'])
-    emit("announce online", {"online": len(online_list), "display": data['display'], "event": "add"}, broadcast=True)
+	if data['display'] not in online_list:
+		print(data['display'] + " has joined!")
+		online_list.append(data['display'])
+		emit("announce online", {"online": len(online_list), "display": data['display'], "event": "add"}, broadcast=True)
+	print(data['display'] + " is already logged in!")
 
 @socketio.on("remove user")
 def gone(data):
@@ -55,3 +52,11 @@ def add_channel(data):
     channel_list.append(data['channel'])
     messages.setdefault(data['channel'], [])
     emit("announce channel", {"channel": data['channel']}, broadcast=True)
+	
+@socketio.on("request online")
+def request_online(data):
+    print("requesting online list!")
+    duplicate = "false"
+    if data['display'] in online_list:
+        duplicate = "true"
+    emit("response online", {"duplicate": duplicate}, broadcast=False)
