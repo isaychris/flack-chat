@@ -4,26 +4,26 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_socketio import SocketIO, emit
 import requests
 
-app = Flask(__name__)
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-socketio = SocketIO(app)
+application = Flask(__name__)
+application.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+socketio = SocketIO(application)
 
 channel_list = ["lobby"]
 online_list = []
 messages = {"lobby": []}
 
-@app.route("/")
+@application.route("/")
 def index():    
     return redirect(url_for('channel', name='lobby'))
 
-@app.route("/c/<string:name>")
+@application.route("/c/<string:name>")
 def channel(name):
     if name not in channel_list:
         return "The channel {} does not exist.".format(name)
 
     return render_template("channel.html", online_list=online_list, channel_list=channel_list, messages=messages[name], current_channel=name)
 
-@app.route('/request_online', methods = ['GET', 'POST'])
+@application.route('/request_online', methods = ['GET', 'POST'])
 def request_online():
     duplicate = False
 
@@ -32,7 +32,7 @@ def request_online():
 
     return jsonify({"duplicate": duplicate})
 
-@app.route('/request_channels', methods = ['GET', 'POST'])
+@application.route('/request_channels', methods = ['GET', 'POST'])
 def request_channels():
     duplicate = False
 
@@ -74,4 +74,4 @@ def add_channel(data):
 	
 	
 if __name__ == "__main__":
-    app.run()
+    application.run()
